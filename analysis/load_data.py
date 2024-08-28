@@ -1,36 +1,34 @@
 import pandas as pd
 import os
 
-def load_data():
+def load_csv(filename):
+    """
+    Load a CSV file from the data directory.
     
+    Args:
+        filename (str): The name of the CSV file to load.
+    
+    Returns:
+        pd.DataFrame: The loaded data as a Pandas DataFrame.
+    """
     script_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(script_dir, '..', 'data')
     
-    # Load datasets from the generated CSVs
-    flipside_labels = pd.read_csv(os.path.join(data_dir, 'program_flipside_labels.csv'))
-    solana_fm_labels = pd.read_csv(os.path.join(data_dir, 'program_solana_fm_labels.csv'))
-    days_active = pd.read_csv(os.path.join(data_dir, 'weekly_days_active.csv'))
-    days_since_last_use = pd.read_csv(os.path.join(data_dir, 'weekly_days_since_last_use.csv'))
-    new_program = pd.read_csv(os.path.join(data_dir, 'weekly_new_program.csv'))
-    new_users = pd.read_csv(os.path.join(data_dir, 'weekly_new_users.csv'))
-    program_data = pd.read_csv(os.path.join(data_dir, 'weekly_program.csv'))
-    users_data = pd.read_csv(os.path.join(data_dir, 'weekly_users.csv'))
-    users_last_use = pd.read_csv(os.path.join(data_dir, 'weekly_users_last_use.csv'))
-
-    return {
-        'flipside_labels': flipside_labels,
-        'solana_fm_labels': solana_fm_labels,
-        'days_active': days_active,
-        'days_since_last_use': days_since_last_use,
-        'new_program': new_program,
-        'new_users': new_users,
-        'program_data': program_data,
-        'users_data': users_data,
-        'users_last_use': users_last_use
-    }
+    file_path = os.path.join(data_dir, filename)
+    
+    
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File {filename} not found in directory {data_dir}")
+    
+    return pd.read_csv(file_path)
 
 if __name__ == "__main__":
-    data = load_data()
-    for name, df in data.items():
-        print(f"{name} data preview:")
-        print(df.head(), "\n")
+    # Example usage: load the 'weekly_program.csv' file
+    program_data = load_csv('weekly_program.csv')
+    print("Program Data Preview:")
+    print(program_data.head(), "\n")
+    
+    # Load additional data as needed
+    users_data = load_csv('weekly_users.csv')
+    print("Users Data Preview:")
+    print(users_data.head(), "\n")
